@@ -47,7 +47,7 @@ namespace Movie36
         {
             try
             {
-                // DB 연결 문자열
+                // DB 연결 문자열 db
                 string connectionString = "User Id=park1; Password=1234; Data Source=(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1522)) (CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = xe)) );";
 
                 // INSERT SQL 문
