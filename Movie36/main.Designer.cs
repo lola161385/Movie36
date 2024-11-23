@@ -40,7 +40,7 @@
             // 
             // enroll_movieBtn
             // 
-            this.enroll_movieBtn.Location = new System.Drawing.Point(240, 137);
+            this.enroll_movieBtn.Location = new System.Drawing.Point(483, 137);
             this.enroll_movieBtn.Name = "enroll_movieBtn";
             this.enroll_movieBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_movieBtn.TabIndex = 0;
@@ -100,12 +100,13 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(483, 137);
+            this.button7.Location = new System.Drawing.Point(240, 137);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 75);
             this.button7.TabIndex = 6;
-            this.button7.Text = "button7";
+            this.button7.Text = "영화목록";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.Invent_movieBtn_Click);
             // 
             // button8
             // 

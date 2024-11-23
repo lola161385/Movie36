@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,6 +42,10 @@ namespace Movie36
         private void order_foodBtn_Click(object sender, EventArgs e)
         {
             OpenOfood();
+        }
+        private void Invent_movieBtn_Click(object sender, EventArgs e)
+        {
+            OpenINVmovie();
         }
 
         //폼 여는 함수
@@ -86,6 +91,13 @@ namespace Movie36
             newOfood.FormClosed += new FormClosedEventHandler(CLosedOfood);
             newOfood.ShowDialog();
         }
+        private void OpenINVmovie()
+        {
+            this.Hide();
+            INVmovie newINVmovie = new INVmovie();
+            newINVmovie.FormClosed += new FormClosedEventHandler(CLosedINVmovie);
+            newINVmovie.ShowDialog();
+        }
 
         // Emovie폼이 닫히면 main폼이 다시 열리는 함수
         private void CLosedEmovie(object sender, FormClosedEventArgs e)
@@ -109,6 +121,10 @@ namespace Movie36
             this.Show();
         }
         private void CLosedOfood(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
+        private void CLosedINVmovie(object sender, FormClosedEventArgs e)
         {
             this.Show();
         }
