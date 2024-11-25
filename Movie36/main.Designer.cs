@@ -28,25 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.enroll_movieBtn = new System.Windows.Forms.Button();
             this.enroll_screenBtn = new System.Windows.Forms.Button();
             this.enroll_foodBtn = new System.Windows.Forms.Button();
             this.enroll_scheduleBtn = new System.Windows.Forms.Button();
             this.ticketBtn = new System.Windows.Forms.Button();
             this.order_foodBtn = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // enroll_movieBtn
-            // 
-            this.enroll_movieBtn.Location = new System.Drawing.Point(483, 137);
-            this.enroll_movieBtn.Name = "enroll_movieBtn";
-            this.enroll_movieBtn.Size = new System.Drawing.Size(75, 75);
-            this.enroll_movieBtn.TabIndex = 0;
-            this.enroll_movieBtn.Text = "영화등록";
-            this.enroll_movieBtn.UseVisualStyleBackColor = true;
-            this.enroll_movieBtn.Click += new System.EventHandler(this.enroll_movieBtn_Click);
             // 
             // enroll_screenBtn
             // 
@@ -108,28 +96,17 @@
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.Invent_movieBtn_Click);
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(483, 218);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 75);
-            this.button8.TabIndex = 7;
-            this.button8.Text = "button8";
-            this.button8.UseVisualStyleBackColor = true;
-            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.order_foodBtn);
             this.Controls.Add(this.ticketBtn);
             this.Controls.Add(this.enroll_scheduleBtn);
             this.Controls.Add(this.enroll_foodBtn);
             this.Controls.Add(this.enroll_screenBtn);
-            this.Controls.Add(this.enroll_movieBtn);
             this.Name = "main";
             this.Text = "메인화면";
             this.ResumeLayout(false);
@@ -137,15 +114,12 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button enroll_movieBtn;
         private System.Windows.Forms.Button enroll_screenBtn;
         private System.Windows.Forms.Button enroll_foodBtn;
         private System.Windows.Forms.Button enroll_scheduleBtn;
         private System.Windows.Forms.Button ticketBtn;
         private System.Windows.Forms.Button order_foodBtn;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button8;
     }
 }
 

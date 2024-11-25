@@ -17,6 +17,28 @@ namespace Movie36
             InitializeComponent();
             LoadMovies();
         }
+
+        private void OpenEmovie()
+        {
+            this.Hide();
+            Emovie newEmovie = new Emovie();
+            newEmovie.FormClosed += new FormClosedEventHandler(CLosedEmovie);
+            newEmovie.ShowDialog();
+        }
+        private void CLosedEmovie(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
+
+        private void AddMoviebtn_Click(object sender, EventArgs e)
+        {
+            OpenEmovie();
+        }
+        private void Closedbtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void LoadMovies()
         {
             // DB에서 영화 데이터 가져오기
@@ -50,6 +72,20 @@ namespace Movie36
                     Height = 40,
                     AutoEllipsis = true
                 };
+
+                posterBox.Click += (s, e) =>
+                {
+                    // 영화 ID만 넘겨서 ChangeMovie 폼 열기
+                    using (ChangeMovie ChangeMovieForm = new ChangeMovie(movie.MovieId))
+                    {
+                        ChangeMovieForm.ShowDialog();
+
+                        // 수정된 후 영화 목록 갱신
+                        flowLayoutPanel1.Controls.Clear();
+                        LoadMovies();
+                    }
+                };
+
 
                 moviePanel.Controls.Add(posterBox);
                 moviePanel.Controls.Add(titleLabel);
