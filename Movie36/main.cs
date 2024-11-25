@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,10 +19,7 @@ namespace Movie36
         }
 
         //버튼 클릭시 발생하는 이벤트
-        private void enroll_movieBtn_Click(object sender, EventArgs e)
-        {
-            OpenEmovie();
-        }
+       
         private void enroll_screenBtn_Click(object sender, EventArgs e)
         {
             OpenEscreen();
@@ -42,15 +40,13 @@ namespace Movie36
         {
             OpenOfood();
         }
+        private void Invent_movieBtn_Click(object sender, EventArgs e)
+        {
+            OpenINVmovie();
+        }
 
         //폼 여는 함수
-        private void OpenEmovie()
-        {
-            this.Hide();
-            Emovie newEmovie = new Emovie();
-            newEmovie.FormClosed += new FormClosedEventHandler(CLosedEmovie);
-            newEmovie.ShowDialog();
-        }
+        
         private void OpenEscreen()
         {
             this.Hide();
@@ -86,12 +82,15 @@ namespace Movie36
             newOfood.FormClosed += new FormClosedEventHandler(CLosedOfood);
             newOfood.ShowDialog();
         }
+        private void OpenINVmovie()
+        {
+            this.Hide();
+            INVmovie newINVmovie = new INVmovie();
+            newINVmovie.FormClosed += new FormClosedEventHandler(CLosedINVmovie);
+            newINVmovie.ShowDialog();
+        }
 
         // Emovie폼이 닫히면 main폼이 다시 열리는 함수
-        private void CLosedEmovie(object sender, FormClosedEventArgs e)
-        {
-            this.Show();
-        }
         private void CLosedEscreen(object sender, FormClosedEventArgs e)
         {
             this.Show();
@@ -109,6 +108,10 @@ namespace Movie36
             this.Show();
         }
         private void CLosedOfood(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
+        private void CLosedINVmovie(object sender, FormClosedEventArgs e)
         {
             this.Show();
         }
