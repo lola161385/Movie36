@@ -21,8 +21,33 @@ namespace Movie36
             return ConfigurationManager.ConnectionStrings["OracleDBConnection"].ConnectionString;
         }
 
+        public string GenerateMovieId()
+        {
+            string connectionString = GetConnectionString();
+            string maxId = "M0"; // 기본값: 영화 ID가 없을 경우 M0
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT MAX(MOVIE_ID) FROM MOVIE";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        maxId = result.ToString(); // 최대 ID 가져오기
+                    }
+                }
+            }
+
+            // 최대 ID에서 숫자 부분 추출 후 1 증가
+            int nextIdNumber = int.Parse(maxId.Substring(1)) + 1;
+            return $"M{nextIdNumber}";
+        }
+
         // 영화 목록에서 포스터 클릭시 ChangeMovie 폼으로 id를 넘겨받아 db에서 정보를 가져오는 함수
-        public Movie GetMovieById(int movieId)
+        public Movie GetMovieById(string movieId)
         {
             Movie movie = null;
             string connectionString = GetConnectionString();
@@ -35,7 +60,7 @@ namespace Movie36
 
                 using (OracleCommand cmd = new OracleCommand(query, conn))
                 {
-                    cmd.Parameters.Add(":movieId", OracleDbType.Int32).Value = movieId;
+                    cmd.Parameters.Add(":movieId", OracleDbType.Varchar2).Value = movieId;
 
                     using (OracleDataReader reader = cmd.ExecuteReader())
                     {
@@ -43,7 +68,7 @@ namespace Movie36
                         {
                             movie = new Movie
                             {
-                                MovieId = Convert.ToInt32(reader["MOVIE_ID"]),
+                                MovieId = reader["MOVIE_ID"].ToString(),
                                 MovieName = reader["MOVIE_NAME"].ToString(),
                                 MovieType = reader["MOVIE_TYPE"].ToString(),
                                 MovieProducer = reader["MOVIE_PRODUCER"].ToString(),
@@ -59,6 +84,7 @@ namespace Movie36
             }
             return movie;
         }
+
 
         // 영화목록을 받아오는 함수 id, 이름 , 포스터 만 받아옴
         public List<Movie> GetMovies()
@@ -79,14 +105,9 @@ namespace Movie36
                         {
                             movies.Add(new Movie
                             {
-                                // MOVIE_ID: NUMBER -> Int32로 변환
-                                MovieId = reader.IsDBNull(0) ? 0 : Convert.ToInt32(reader.GetDecimal(0)),
-
-                                // MOVIE_NAME: VARCHAR2 -> 문자열로 읽음
-                                MovieName = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
-
-                                // MOVIE_POSTER: VARCHAR2 -> 문자열로 읽음
-                                MoviePoster = reader.IsDBNull(2) ? string.Empty : reader.GetString(2)
+                                MovieId = reader["MOVIE_ID"].ToString(),
+                                MovieName = reader["MOVIE_NAME"].ToString(),
+                                MoviePoster = reader["MOVIE_POSTER"].ToString()
                             });
                         }
                     }
@@ -95,6 +116,7 @@ namespace Movie36
             return movies;
         }
 
+
         // 영화 포스터 클릭 후 수정 버튼 클릭시 수정 하는 함수
         public bool UpdateMovie(Movie movie)
         {
@@ -102,22 +124,21 @@ namespace Movie36
             {
                 string connectionString = GetConnectionString();
                 string query = @"UPDATE MOVIE SET 
-                            MOVIE_NAME = :name,
-                            MOVIE_TYPE = :type,
-                            MOVIE_PRODUCER = :producer,
-                            MOVIE_PERFORMER = :performer,
-                            MOVIE_RATING = :rating,
-                            MOVIE_RELEASEDATE = :releaseDate,
-                            MOVIE_OVERVIEW = :overview,
-                            MOVIE_POSTER = :poster
-                         WHERE MOVIE_ID = :id";
+                        MOVIE_NAME = :name,
+                        MOVIE_TYPE = :type,
+                        MOVIE_PRODUCER = :producer,
+                        MOVIE_PERFORMER = :performer,
+                        MOVIE_RATING = :rating,
+                        MOVIE_RELEASEDATE = :releaseDate,
+                        MOVIE_OVERVIEW = :overview,
+                        MOVIE_POSTER = :poster
+                     WHERE MOVIE_ID = :id";
 
                 using (OracleConnection connection = new OracleConnection(connectionString))
                 {
                     connection.Open();
                     using (OracleCommand command = new OracleCommand(query, connection))
                     {
-                        // 매개변수 바인딩
                         command.Parameters.Add(":name", OracleDbType.Varchar2).Value = movie.MovieName ?? (object)DBNull.Value;
                         command.Parameters.Add(":type", OracleDbType.Varchar2).Value = movie.MovieType ?? (object)DBNull.Value;
                         command.Parameters.Add(":producer", OracleDbType.Varchar2).Value = movie.MovieProducer ?? (object)DBNull.Value;
@@ -126,11 +147,10 @@ namespace Movie36
                         command.Parameters.Add(":releaseDate", OracleDbType.Date).Value = movie.ReleaseDate;
                         command.Parameters.Add(":overview", OracleDbType.Varchar2).Value = movie.MovieOverview ?? (object)DBNull.Value;
                         command.Parameters.Add(":poster", OracleDbType.Varchar2).Value = movie.MoviePoster ?? (object)DBNull.Value;
-                        command.Parameters.Add(":id", OracleDbType.Int32).Value = movie.MovieId;
+                        command.Parameters.Add(":id", OracleDbType.Varchar2).Value = movie.MovieId;
 
-                        // 쿼리 실행
                         int rowsUpdated = command.ExecuteNonQuery();
-                        return rowsUpdated > 0; // 수정 성공 여부 반환
+                        return rowsUpdated > 0;
                     }
                 }
             }
@@ -140,9 +160,10 @@ namespace Movie36
                 return false;
             }
         }
-        
+
+
         // 영화등록 함수
-        public bool InsertMovie(int movieId, string movieName, string movieRating, string movieType,
+        public bool InsertMovie(string movieName, string movieRating, string movieType,
                         string movieProducer, string moviePerformer, DateTime movieReleaseDate,
                         string movieOverview, string moviePoster, string movieStatus)
         {
@@ -159,30 +180,24 @@ namespace Movie36
                                   :movie_overview, :movie_poster, :movie_status
                               )";
 
+                string movieId = GenerateMovieId(); // 새로운 영화 ID 생성
+
                 using (OracleConnection connection = new OracleConnection(connectionString))
                 {
                     connection.Open();
                     using (OracleCommand command = new OracleCommand(insertQuery, connection))
                     {
-                        // NUMBER 타입 파라미터
-                        command.Parameters.Add(":movie_id", OracleDbType.Int32).Value = movieId;
-
-                        // VARCHAR2 타입 파라미터
+                        command.Parameters.Add(":movie_id", OracleDbType.Varchar2).Value = movieId;
                         command.Parameters.Add(":movie_name", OracleDbType.Varchar2).Value = movieName ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_rating", OracleDbType.Varchar2).Value = movieRating ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_type", OracleDbType.Varchar2).Value = movieType ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_producer", OracleDbType.Varchar2).Value = movieProducer ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_performer", OracleDbType.Varchar2).Value = moviePerformer ?? (object)DBNull.Value;
-
-                        // DATE 타입 파라미터
                         command.Parameters.Add(":movie_releaseDate", OracleDbType.Date).Value = movieReleaseDate;
-
-                        // VARCHAR2 (긴 텍스트)
                         command.Parameters.Add(":movie_overview", OracleDbType.Varchar2).Value = movieOverview ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_poster", OracleDbType.Varchar2).Value = moviePoster ?? (object)DBNull.Value;
                         command.Parameters.Add(":movie_status", OracleDbType.Varchar2).Value = movieStatus ?? (object)DBNull.Value;
 
-                        // INSERT 실행
                         command.ExecuteNonQuery();
                         MessageBox.Show("Movie data has been inserted successfully.");
                         return true;
@@ -197,9 +212,10 @@ namespace Movie36
         }
     }
 
+
         public class Movie
     {
-        public int MovieId { get; set; } // 영화 ID
+        public string MovieId { get; set; } // 영화 ID
         public string MovieName { get; set; } // 영화 제목
         public string MovieType { get; set; } // 영화 장르
         public string MoviePoster { get; set; } // 영화 포스터
