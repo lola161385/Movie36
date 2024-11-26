@@ -120,6 +120,9 @@
     <EmbeddedResource Include="Form\Emovie.resx">
       <DependentUpon>Emovie.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form\Eschedule.resx">
+      <DependentUpon>Eschedule.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\INVmovie.resx">
       <DependentUpon>INVmovie.cs</DependentUpon>
     </EmbeddedResource>
