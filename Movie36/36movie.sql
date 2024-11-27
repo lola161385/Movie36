@@ -38,14 +38,14 @@ CREATE TABLE SCHEDULE (
 
 --TICKET 테이블
 CREATE TABLE TICKET (
-    TICKET_ID VARCHAR2(20) PRIMARY KEY,        -- 티켓 ID (기본 키)
-    SCHEDULE_ID VARCHAR2(20),                  -- 상영 일정 ID (외래 키)
-    CUSTOMER_NAME VARCHAR2(20),                -- 고객 이름
-    CUSTOMER_PHONE VARCHAR2(20),               -- 고객 전화번호
-    CUSTOMER_COUNT NUMBER,                     -- 고객 수
-    SELECT_SEATS VARCHAR2(50),                 -- 선택한 좌석
-    PAYMENT VARCHAR2(20),                      -- 결제 상태 (예: 완료, 대기 등)
+    TICKET_ID VARCHAR2(20) PRIMARY KEY,        
+    SCHEDULE_ID VARCHAR2(20),                  
+    CUSTOMER_NAME VARCHAR2(20),                
+    CUSTOMER_PHONE VARCHAR2(20),               
+    CUSTOMER_COUNT NUMBER,                    
+    SELECT_SEATS VARCHAR2(50),                
+    PAYMENT VARCHAR2(20),                      
     
     CONSTRAINT FK_SCHEDULE_ID FOREIGN KEY (SCHEDULE_ID)
-        REFERENCES SCHEDULE (SCHEDULE_ID)     -- 외래 키 제약 조건 (SCHEDULE 테이블 참조)
+        REFERENCES SCHEDULE (SCHEDULE_ID)     
 );
