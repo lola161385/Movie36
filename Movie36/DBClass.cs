@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Movie36
@@ -84,7 +86,69 @@ namespace Movie36
             }
             return movie;
         }
+        // 지정된 SCHEDULE_ID에 대해 예약된 좌석 수를 반환하는 함수
+        public int GetBookedSeatsCount(string scheduleId)
+        {
+            string connectionString = GetConnectionString();
+            int bookedSeatsCount = 0;
 
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT SUM(CUSTOMER_COUNT) FROM TICKET WHERE SCHEDULE_ID = :scheduleId";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.Parameters.Add(":scheduleId", OracleDbType.Varchar2).Value = scheduleId;
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != DBNull.Value && result != null)
+                    {
+                        bookedSeatsCount = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            return bookedSeatsCount;
+        }
+        //티켓 날짜별 영화 검색 함수
+        public List<Movie> GetMoviesByDate(DateTime selectedDate)
+        {
+            List<Movie> movies = new List<Movie>();
+            string connectionString = GetConnectionString();
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = @"
+                    SELECT M.MOVIE_ID, M.MOVIE_NAME, M.MOVIE_POSTER, S.SHOW_TIME, S.SCHEDULE_ID
+                    FROM MOVIE M
+                    JOIN SCHEDULE S ON M.MOVIE_ID = S.MOVIE_ID
+                    WHERE S.SCHEDULE_DATE = :selectedDate
+                    ORDER BY S.SHOW_TIME";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.Parameters.Add(":selectedDate", OracleDbType.Date).Value = selectedDate;
+
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            movies.Add(new Movie
+                            {
+                                MovieId = reader["MOVIE_ID"].ToString(),
+                                MovieName = reader["MOVIE_NAME"].ToString(),
+                                MoviePoster = reader["MOVIE_POSTER"].ToString(),
+                                ShowTime = reader["SHOW_TIME"].ToString(),
+                                ScheduleId = reader["SCHEDULE_ID"].ToString()  // ScheduleId 추가
+                            });
+                        }
+                    }
+                }
+            }
+            return movies;
+        }
 
         // 영화목록을 받아오는 함수 id, 이름 , 포스터 만 받아옴
         public List<Movie> GetMovies()
@@ -115,7 +179,6 @@ namespace Movie36
             }
             return movies;
         }
-
 
         // 영화 포스터 클릭 후 수정 버튼 클릭시 수정 하는 함수
         public bool UpdateMovie(Movie movie)
@@ -360,6 +423,99 @@ namespace Movie36
                 return false;
             }
         }
+        // DBClass 클래스 내에 추가할 메서드
+        public string GetScreenNameByScheduleId(string scheduleId)
+        {
+            string screenName = "";
+            string query = @"
+                SELECT s.SCREEN_NAME
+                FROM SCHEDULE sc
+                JOIN SCREEN s ON sc.SCREEN_ID = s.SCREEN_ID
+                WHERE sc.SCHEDULE_ID = :scheduleId";
+
+            using (OracleConnection conn = new OracleConnection(GetConnectionString()))
+            {
+                OracleCommand cmd = new OracleCommand(query, conn);
+                cmd.Parameters.Add(":scheduleId", OracleDbType.Varchar2).Value = scheduleId; // 파라미터 설정
+                conn.Open();
+
+                var result = cmd.ExecuteScalar();
+                if (result != null)
+                {
+                    screenName = result.ToString();
+                }
+            }
+
+            return screenName;
+        }
+        public List<string> GetReservedSeats(string scheduleId)
+        {
+            List<string> reservedSeats = new List<string>();
+            string connectionString = GetConnectionString();
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT SELECT_SEATS FROM TICKET WHERE SCHEDULE_ID = :scheduleId";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.Parameters.Add(":scheduleId", OracleDbType.Varchar2).Value = scheduleId;
+
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string seats = reader["SELECT_SEATS"].ToString();
+                            if (!string.IsNullOrEmpty(seats))
+                            {
+                                // 좌석 문자열을 ','로 분리하여 리스트에 추가
+                                reservedSeats.AddRange(seats.Split(','));
+                            }
+                        }
+                    }
+                }
+            }
+            return reservedSeats;
+        }
+
+        public bool SaveTicket(string scheduleId, string customerName, string customerPhone, int customerCount, List<Button> selectedSeats)
+        {
+            string connectionString = GetConnectionString();
+            string ticketId = "T" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            string selectSeats = string.Join(",", selectedSeats.Select(seat => seat.Name));
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"
+                INSERT INTO TICKET (TICKET_ID, SCHEDULE_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COUNT, SELECT_SEATS, PAYMENT)
+                VALUES (:ticketId, :scheduleId, :customerName, :customerPhone, :customerCount, :selectSeats, :payment)";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(":ticketId", OracleDbType.Varchar2).Value = ticketId;
+                        cmd.Parameters.Add(":scheduleId", OracleDbType.Varchar2).Value = scheduleId;
+                        cmd.Parameters.Add(":customerName", OracleDbType.Varchar2).Value = customerName;
+                        cmd.Parameters.Add(":customerPhone", OracleDbType.Varchar2).Value = customerPhone;
+                        cmd.Parameters.Add(":customerCount", OracleDbType.Int32).Value = customerCount;
+                        cmd.Parameters.Add(":selectSeats", OracleDbType.Varchar2).Value = selectSeats;
+                        cmd.Parameters.Add(":payment", OracleDbType.Varchar2).Value = "카드";  // 기본 결제 방법은 카드
+
+                        cmd.ExecuteNonQuery();
+                    }
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("티켓 저장 오류: " + ex.Message);
+                    return false;
+                }
+            }
+        }
+
 
     }
 
@@ -374,6 +530,9 @@ namespace Movie36
         public DateTime ReleaseDate { get; set; } // 개봉일
         public string MovieOverview { get; set; } // 줄거리
         public string MovieProducer { get; set; } // 감독
+        public string ShowTime { get; set; }
+        public string ScreenID {  get; set; }
+        public string ScheduleId {  get; set; }
     }
 
     public class Screen
@@ -382,5 +541,14 @@ namespace Movie36
         public string ScreenName { get; set; }
         public string ScreenType { get; set; }
         public int ScreenTotalSeats { get; set; }
+    }
+
+    public class Schedule
+    {
+        public string ScheduleId { get; set; }
+        public DateTime DateTime { get; set; }
+        public string ShowTime { get; set; }
+        public string MovieId { get; set; }
+        public string ScreenId { get; set; }
     }
 }
