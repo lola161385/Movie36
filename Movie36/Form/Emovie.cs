@@ -21,12 +21,10 @@ namespace Movie36
         {
 
         }
-
         private void savebtn_Click(object sender, EventArgs e)
         {
             try
             {
-                // 유효성 검사
                 if (string.IsNullOrWhiteSpace(MovieName.Text) ||
                     string.IsNullOrWhiteSpace(MovieType.Text) ||
                     string.IsNullOrWhiteSpace(Movieproducer.Text) ||
@@ -39,7 +37,6 @@ namespace Movie36
                     return;
                 }
 
-                // 폼에서 입력값 가져오기
                 string movieName = MovieName.Text;
                 string movieRating = MovieRating.SelectedItem?.ToString();
                 string movieType = MovieType.Text;
@@ -47,16 +44,13 @@ namespace Movie36
                 string moviePerformer = MoviePerformer.Text;
                 DateTime movieReleaseDate = MovieRelesedate.Value;
                 string movieOverview = MovieOverview.Text;
-                string moviePoster = pictureBox1.ImageLocation; // 이미지 경로
-                string movieStatus = "Active"; // 기본 상태값
-                int movieId = new Random().Next(1, 10000); // 임시 ID 생성 (추후 고유 ID 생성 방식 적용)
+                string moviePoster = pictureBox1.ImageLocation;
+                string movieStatus = "Active";
 
-                // DBClass의 InsertMovie 호출
                 DBClass db = new DBClass();
-                if (db.InsertMovie(movieId, movieName, movieRating, movieType, movieProducer,
+                if (db.InsertMovie(movieName, movieRating, movieType, movieProducer,
                                    moviePerformer, movieReleaseDate, movieOverview, moviePoster, movieStatus))
                 {
-                    // 삽입 성공 시 폼 닫기
                     this.Close();
                 }
             }
@@ -65,6 +59,7 @@ namespace Movie36
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
 
         private void imgbtn_Click(object sender, EventArgs e)
         {

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.enroll_screenBtn = new System.Windows.Forms.Button();
             this.enroll_foodBtn = new System.Windows.Forms.Button();
             this.enroll_scheduleBtn = new System.Windows.Forms.Button();
             this.ticketBtn = new System.Windows.Forms.Button();
@@ -36,19 +35,9 @@
             this.button7 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // enroll_screenBtn
-            // 
-            this.enroll_screenBtn.Location = new System.Drawing.Point(240, 218);
-            this.enroll_screenBtn.Name = "enroll_screenBtn";
-            this.enroll_screenBtn.Size = new System.Drawing.Size(75, 75);
-            this.enroll_screenBtn.TabIndex = 1;
-            this.enroll_screenBtn.Text = "상영관";
-            this.enroll_screenBtn.UseVisualStyleBackColor = true;
-            this.enroll_screenBtn.Click += new System.EventHandler(this.enroll_screenBtn_Click);
-            // 
             // enroll_foodBtn
             // 
-            this.enroll_foodBtn.Location = new System.Drawing.Point(321, 137);
+            this.enroll_foodBtn.Location = new System.Drawing.Point(101, 206);
             this.enroll_foodBtn.Name = "enroll_foodBtn";
             this.enroll_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_foodBtn.TabIndex = 2;
@@ -58,7 +47,7 @@
             // 
             // enroll_scheduleBtn
             // 
-            this.enroll_scheduleBtn.Location = new System.Drawing.Point(321, 218);
+            this.enroll_scheduleBtn.Location = new System.Drawing.Point(142, 125);
             this.enroll_scheduleBtn.Name = "enroll_scheduleBtn";
             this.enroll_scheduleBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_scheduleBtn.TabIndex = 3;
@@ -68,7 +57,7 @@
             // 
             // ticketBtn
             // 
-            this.ticketBtn.Location = new System.Drawing.Point(402, 137);
+            this.ticketBtn.Location = new System.Drawing.Point(223, 125);
             this.ticketBtn.Name = "ticketBtn";
             this.ticketBtn.Size = new System.Drawing.Size(75, 75);
             this.ticketBtn.TabIndex = 4;
@@ -78,7 +67,7 @@
             // 
             // order_foodBtn
             // 
-            this.order_foodBtn.Location = new System.Drawing.Point(402, 218);
+            this.order_foodBtn.Location = new System.Drawing.Point(182, 206);
             this.order_foodBtn.Name = "order_foodBtn";
             this.order_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.order_foodBtn.TabIndex = 5;
@@ -88,7 +77,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(240, 137);
+            this.button7.Location = new System.Drawing.Point(61, 125);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 75);
             this.button7.TabIndex = 6;
@@ -100,13 +89,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(365, 369);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.order_foodBtn);
             this.Controls.Add(this.ticketBtn);
             this.Controls.Add(this.enroll_scheduleBtn);
             this.Controls.Add(this.enroll_foodBtn);
-            this.Controls.Add(this.enroll_screenBtn);
             this.Name = "main";
             this.Text = "메인화면";
             this.ResumeLayout(false);
@@ -114,7 +102,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button enroll_screenBtn;
         private System.Windows.Forms.Button enroll_foodBtn;
         private System.Windows.Forms.Button enroll_scheduleBtn;
         private System.Windows.Forms.Button ticketBtn;

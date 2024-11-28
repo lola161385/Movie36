@@ -16,11 +16,11 @@ namespace Movie36
         private DBClass db;         // DBClass 인스턴스
 
         // MovieID를 받아서 영화 정보를 DB에서 가져오는 생성자
-        public ChangeMovie(int movieId)
+        public ChangeMovie(string movieId)
         {
             InitializeComponent();
-            db = new DBClass(); // DB 연결
-            currentMovie = db.GetMovieById(movieId); // MovieID로 영화 정보를 DB에서 가져옴
+            db = new DBClass();
+            currentMovie = db.GetMovieById(movieId);
             LoadMovieData();
         }
 
@@ -52,7 +52,7 @@ namespace Movie36
         }
 
         // DB에서 MovieID로 영화 정보를 가져오는 메서드
-        private Movie GetMovieById(int movieId)
+        private Movie GetMovieById(string movieId)
         {
             List<Movie> movies = db.GetMovies(); // DB에서 모든 영화 목록을 가져옴
             return movies.FirstOrDefault(m => m.MovieId == movieId); // MovieID로 영화 찾기
