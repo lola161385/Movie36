@@ -6,4 +6,3 @@ NuGet 패키지 관리 에서 System.Configuration.ConfigurationManager 패키�
 
 
 
-sql create table movie(movie_id varchar2(50) primary key, movie_name varchar2(100), movie_rating varchar2(20), movie_type varchar2(20), movie_producer varchar2(50), movie_performer varchar2(300), movie_releaseDate date, movie_overview varchar2(4000), movie_poster varchar2(2000), movie_status varchar2(50))
