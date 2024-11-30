@@ -44,9 +44,14 @@ namespace Movie36
         {
             OpenINVmovie();
         }
+        private void Check_orderbtn_Click(object sender, EventArgs e)
+        {
+            OpenCheckOrderFood();
+        }
+
 
         //폼 여는 함수
-        
+
         private void OpenEscreen()
         {
             this.Hide();
@@ -89,6 +94,13 @@ namespace Movie36
             newINVmovie.FormClosed += new FormClosedEventHandler(CLosedINVmovie);
             newINVmovie.ShowDialog();
         }
+        private void OpenCheckOrderFood()
+        {
+            this.Hide();
+            CheckOrderFood newCheckOrderFood = new CheckOrderFood();
+            newCheckOrderFood.FormClosed += new FormClosedEventHandler(CLosedCheckOrderFood);
+            newCheckOrderFood.ShowDialog();
+        }
 
         // Emovie폼이 닫히면 main폼이 다시 열리는 함수
         private void CLosedEscreen(object sender, FormClosedEventArgs e)
@@ -112,6 +124,10 @@ namespace Movie36
             this.Show();
         }
         private void CLosedINVmovie(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
+        private void CLosedCheckOrderFood(object sender, FormClosedEventArgs e)
         {
             this.Show();
         }

@@ -180,6 +180,36 @@ namespace Movie36
             return movies;
         }
 
+        public List<Food> GetFoods() 
+        {
+            List<Food> foods = new List<Food>();
+            string connectionString = GetConnectionString();
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT FOOD_ID, FOOD_NAME, FOOD_IMAGE, FOOD_PRICE, FOOD_TYPE FROM FOOD";
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            foods.Add(new Food
+                            {
+                                foodID = reader["FOOD_ID"].ToString(),
+                                foodName = reader["FOOD_NAME"].ToString(),
+                                foodImage = reader["FOOD_IMAGE"].ToString(),
+                                foodPrice = reader["FOOD_PRICE"].ToString(),
+                                foodCategory = reader["FOOD_TYPE"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return foods;
+        }
+
         // 영화 포스터 클릭 후 수정 버튼 클릭시 수정 하는 함수
         public bool UpdateMovie(Movie movie)
         {
@@ -580,6 +610,130 @@ namespace Movie36
                 MessageBox.Show("Error inserting data: " + ex.Message);
                 return false;
             }
+        }
+        public void SaveOrder(string paymentMethod, Dictionary<string, (int quantity, int price)> cartItems)
+        {
+            string connectionString = GetConnectionString();
+            string orderId = GenerateOrderId(); // 새로운 주문 ID 생성
+            int totalAmount = cartItems.Sum(item => item.Value.quantity * item.Value.price); // 총 금액 계산
+            DateTime orderDate = DateTime.Now;
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                using (OracleTransaction transaction = conn.BeginTransaction()) // 트랜잭션 시작
+                {
+                    try
+                    {
+                        // 1. 주문(ORDERS) 테이블에 저장
+                        string insertOrderQuery = @"
+                    INSERT INTO ORDERS (ORDER_ID, ORDER_DATE, ORDER_TOTAL_AMOUNT, ORDER_PAYMENT, ORDER_NO)
+                    VALUES (:orderId, :orderDate, :totalAmount, :paymentMethod, :orderNo)";
+
+                        using (OracleCommand cmd = new OracleCommand(insertOrderQuery, conn))
+                        {
+                            cmd.Parameters.Add(":orderId", OracleDbType.Varchar2).Value = orderId;
+                            cmd.Parameters.Add(":orderDate", OracleDbType.Date).Value = orderDate;
+                            cmd.Parameters.Add(":totalAmount", OracleDbType.Int32).Value = totalAmount;
+                            cmd.Parameters.Add(":paymentMethod", OracleDbType.Varchar2).Value = paymentMethod;
+                            cmd.Parameters.Add(":orderNo", OracleDbType.Varchar2).Value = GenerateOrderNo(orderDate); // 주문 번호 생성
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 2. 주문 상세(ORDER_DETAIL) 테이블에 저장
+                        foreach (var item in cartItems)
+                        {
+                            string foodName = item.Key;
+                            int quantity = item.Value.quantity;
+                            int price = item.Value.price;
+
+                            // food_id 가져오기
+                            string foodId = GetFoodIdByName(foodName, conn);
+
+                            if (!string.IsNullOrEmpty(foodId))
+                            {
+                                string insertOrderDetailQuery = @"
+                            INSERT INTO ORDER_DETAIL (ITEM_ID, ORDER_ID, FOOD_ID, ITEM_QUANTITY, PRICE)
+                            VALUES (ORDER_DETAIL_SEQ.NEXTVAL, :orderId, :foodId, :quantity, :price)";
+
+                                using (OracleCommand cmd = new OracleCommand(insertOrderDetailQuery, conn))
+                                {
+                                    cmd.Parameters.Add(":orderId", OracleDbType.Varchar2).Value = orderId;
+                                    cmd.Parameters.Add(":foodId", OracleDbType.Varchar2).Value = foodId;
+                                    cmd.Parameters.Add(":quantity", OracleDbType.Int32).Value = quantity;
+                                    cmd.Parameters.Add(":price", OracleDbType.Int32).Value = price;
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        transaction.Commit(); // 모든 작업이 성공하면 커밋
+                    }
+                    catch
+                    {
+                        transaction.Rollback(); // 에러 발생 시 롤백
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private string GetFoodIdByName(string foodName, OracleConnection conn)
+        {
+            string query = "SELECT FOOD_ID FROM FOOD WHERE FOOD_NAME = :foodName";
+            using (OracleCommand cmd = new OracleCommand(query, conn))
+            {
+                cmd.Parameters.Add(":foodName", OracleDbType.Varchar2).Value = foodName;
+                object result = cmd.ExecuteScalar();
+                return result?.ToString();
+            }
+        }
+
+        private string GenerateOrderId()
+        {
+            return "O" + DateTime.Now.ToString("yyyyMMddHHmmss"); // 예: O20241130124500
+        }
+
+        private string GenerateOrderNo(DateTime orderDate)
+        {
+            return "ON" + orderDate.ToString("yyyyMMdd") + new Random().Next(1000, 9999); // 예: ON202411301234
+        }
+
+        // 주문 목록을 불러오는 함수
+        public DataTable LoadOrders()
+        {
+            string connectionString = GetConnectionString();
+            string query = @"
+        SELECT ORDER_ID, ORDER_DATE, ORDER_TOTAL_AMOUNT, ORDER_PAYMENT, ORDER_NO
+        FROM ORDERS";  // ORDERS 테이블에서 데이터를 가져옵니다.
+
+            DataTable dt = new DataTable();
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                OracleDataAdapter da = new OracleDataAdapter(query, conn);
+                da.Fill(dt); // DataTable에 데이터 채우기
+            }
+            return dt;
+        }
+
+        // 주문 상세 정보를 불러오는 함수
+        public DataTable LoadOrderDetails(string orderId)
+        {
+            string connectionString = GetConnectionString();
+            string query = @"
+        SELECT F.FOOD_NAME, OD.ITEM_QUANTITY, OD.PRICE
+        FROM ORDER_DETAIL OD
+        JOIN FOOD F ON F.FOOD_ID = OD.FOOD_ID
+        WHERE OD.ORDER_ID = :orderId";  // 주문 ID에 맞는 상세 정보를 가져옵니다.
+
+            DataTable dt = new DataTable();
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                OracleDataAdapter da = new OracleDataAdapter(query, conn);
+                da.SelectCommand.Parameters.Add(":orderId", OracleDbType.Varchar2).Value = orderId;
+                da.Fill(dt); // DataTable에 데이터 채우기
+            }
+            return dt;
         }
 
     }
