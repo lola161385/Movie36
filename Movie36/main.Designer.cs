@@ -33,11 +33,12 @@
             this.ticketBtn = new System.Windows.Forms.Button();
             this.order_foodBtn = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
+            this.Check_orderbtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // enroll_foodBtn
             // 
-            this.enroll_foodBtn.Location = new System.Drawing.Point(101, 206);
+            this.enroll_foodBtn.Location = new System.Drawing.Point(61, 206);
             this.enroll_foodBtn.Name = "enroll_foodBtn";
             this.enroll_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_foodBtn.TabIndex = 2;
@@ -67,7 +68,7 @@
             // 
             // order_foodBtn
             // 
-            this.order_foodBtn.Location = new System.Drawing.Point(182, 206);
+            this.order_foodBtn.Location = new System.Drawing.Point(142, 206);
             this.order_foodBtn.Name = "order_foodBtn";
             this.order_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.order_foodBtn.TabIndex = 5;
@@ -85,11 +86,22 @@
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.Invent_movieBtn_Click);
             // 
+            // Check_orderbtn
+            // 
+            this.Check_orderbtn.Location = new System.Drawing.Point(223, 206);
+            this.Check_orderbtn.Name = "Check_orderbtn";
+            this.Check_orderbtn.Size = new System.Drawing.Size(75, 75);
+            this.Check_orderbtn.TabIndex = 7;
+            this.Check_orderbtn.Text = "음식주문 확인";
+            this.Check_orderbtn.UseVisualStyleBackColor = true;
+            this.Check_orderbtn.Click += new System.EventHandler(this.Check_orderbtn_Click);
+            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(365, 369);
+            this.Controls.Add(this.Check_orderbtn);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.order_foodBtn);
             this.Controls.Add(this.ticketBtn);
@@ -107,6 +119,7 @@
         private System.Windows.Forms.Button ticketBtn;
         private System.Windows.Forms.Button order_foodBtn;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button Check_orderbtn;
     }
 }
 
