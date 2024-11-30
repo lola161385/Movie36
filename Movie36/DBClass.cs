@@ -516,6 +516,71 @@ namespace Movie36
             }
         }
 
+        //음식 ID생성
+        public string GenerateFoodId()
+        {
+            string connectionString = GetConnectionString();
+            string maxId = "F0"; // 기본값: 영화 ID가 없을 경우 M0
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT MAX(FOOD_ID) FROM FOOD";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        maxId = result.ToString(); // 최대 ID 가져오기
+                    }
+                }
+            }
+
+            // 최대 ID에서 숫자 부분 추출 후 1 증가
+            int nextIdNumber = int.Parse(maxId.Substring(1)) + 1;
+            return $"F{nextIdNumber}";
+        }
+        // 음식 추가 함수
+        public bool InsertFood(string foodName, string foodCategory, string foodPrice, string foodQuantity, string foodImage, string foodDesc)
+        {
+            try
+            {
+                string connectionString = GetConnectionString();
+                string insertQuery = @"INSERT INTO FOOD (
+                                  FOOD_ID, FOOD_NAME, FOOD_TYPE, FOOD_PRICE,
+                                  FOOD_AMOUNT, FOOD_IMAGE, FOOD_DESC
+                              ) VALUES (
+                                  :food_id, :food_name, :food_type, :food_price,
+                                  :food_quantity, :food_image, :food_desc
+                              )";
+
+                string foodId = GenerateFoodId(); // 새로운 음식 ID 생성
+
+                using (OracleConnection connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+                    using (OracleCommand command = new OracleCommand(insertQuery, connection))
+                    {
+                        command.Parameters.Add(":food_id", OracleDbType.Varchar2).Value = foodId;
+                        command.Parameters.Add(":food_name", OracleDbType.Varchar2).Value = foodName ?? (object)DBNull.Value;
+                        command.Parameters.Add(":food_type", OracleDbType.Varchar2).Value = foodCategory ?? (object)DBNull.Value;
+                        command.Parameters.Add(":food_price", OracleDbType.Varchar2).Value = foodPrice ?? (object)DBNull.Value;
+                        command.Parameters.Add(":food_quantity", OracleDbType.Varchar2).Value = foodQuantity ?? (object)DBNull.Value;
+                        command.Parameters.Add(":food_image", OracleDbType.Varchar2).Value = foodImage ?? (object)DBNull.Value;
+                        command.Parameters.Add(":food_desc", OracleDbType.Varchar2).Value = foodDesc ?? (object)DBNull.Value; ;
+
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error inserting data: " + ex.Message);
+                return false;
+            }
+        }
 
     }
 
