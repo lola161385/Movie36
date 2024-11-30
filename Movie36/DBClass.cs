@@ -616,4 +616,14 @@ namespace Movie36
         public string MovieId { get; set; }
         public string ScreenId { get; set; }
     }
+    public class Food
+    {
+        public string foodID { get; set; }
+        public string foodName { get; set; }
+        public string foodCategory { get; set; }
+        public string foodQuantity { get; set; }
+        public string foodPrice { get; set; }
+        public string foodImage { get; set; }
+        public string foodDesc { get; set; }
+    }
 }
