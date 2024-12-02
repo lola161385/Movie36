@@ -34,11 +34,12 @@
             this.order_foodBtn = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.Check_orderbtn = new System.Windows.Forms.Button();
+            this.ticketprintbtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // enroll_foodBtn
             // 
-            this.enroll_foodBtn.Location = new System.Drawing.Point(61, 206);
+            this.enroll_foodBtn.Location = new System.Drawing.Point(102, 153);
             this.enroll_foodBtn.Name = "enroll_foodBtn";
             this.enroll_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_foodBtn.TabIndex = 2;
@@ -48,7 +49,7 @@
             // 
             // enroll_scheduleBtn
             // 
-            this.enroll_scheduleBtn.Location = new System.Drawing.Point(142, 125);
+            this.enroll_scheduleBtn.Location = new System.Drawing.Point(142, 72);
             this.enroll_scheduleBtn.Name = "enroll_scheduleBtn";
             this.enroll_scheduleBtn.Size = new System.Drawing.Size(75, 75);
             this.enroll_scheduleBtn.TabIndex = 3;
@@ -58,7 +59,7 @@
             // 
             // ticketBtn
             // 
-            this.ticketBtn.Location = new System.Drawing.Point(223, 125);
+            this.ticketBtn.Location = new System.Drawing.Point(223, 72);
             this.ticketBtn.Name = "ticketBtn";
             this.ticketBtn.Size = new System.Drawing.Size(75, 75);
             this.ticketBtn.TabIndex = 4;
@@ -68,7 +69,7 @@
             // 
             // order_foodBtn
             // 
-            this.order_foodBtn.Location = new System.Drawing.Point(142, 206);
+            this.order_foodBtn.Location = new System.Drawing.Point(183, 153);
             this.order_foodBtn.Name = "order_foodBtn";
             this.order_foodBtn.Size = new System.Drawing.Size(75, 75);
             this.order_foodBtn.TabIndex = 5;
@@ -78,7 +79,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(61, 125);
+            this.button7.Location = new System.Drawing.Point(61, 72);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 75);
             this.button7.TabIndex = 6;
@@ -88,7 +89,7 @@
             // 
             // Check_orderbtn
             // 
-            this.Check_orderbtn.Location = new System.Drawing.Point(223, 206);
+            this.Check_orderbtn.Location = new System.Drawing.Point(264, 153);
             this.Check_orderbtn.Name = "Check_orderbtn";
             this.Check_orderbtn.Size = new System.Drawing.Size(75, 75);
             this.Check_orderbtn.TabIndex = 7;
@@ -96,11 +97,22 @@
             this.Check_orderbtn.UseVisualStyleBackColor = true;
             this.Check_orderbtn.Click += new System.EventHandler(this.Check_orderbtn_Click);
             // 
+            // ticketprintbtn
+            // 
+            this.ticketprintbtn.Location = new System.Drawing.Point(304, 72);
+            this.ticketprintbtn.Name = "ticketprintbtn";
+            this.ticketprintbtn.Size = new System.Drawing.Size(75, 75);
+            this.ticketprintbtn.TabIndex = 8;
+            this.ticketprintbtn.Text = "티켓 출력";
+            this.ticketprintbtn.UseVisualStyleBackColor = true;
+            this.ticketprintbtn.Click += new System.EventHandler(this.ticket_listbtn_Click);
+            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(365, 369);
+            this.ClientSize = new System.Drawing.Size(446, 300);
+            this.Controls.Add(this.ticketprintbtn);
             this.Controls.Add(this.Check_orderbtn);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.order_foodBtn);
@@ -120,6 +132,7 @@
         private System.Windows.Forms.Button order_foodBtn;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button Check_orderbtn;
+        private System.Windows.Forms.Button ticketprintbtn;
     }
 }
 

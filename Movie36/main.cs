@@ -48,6 +48,10 @@ namespace Movie36
         {
             OpenCheckOrderFood();
         }
+        private void ticket_listbtn_Click(object sender, EventArgs e)
+        {
+            OpenTicketList();
+        }
 
 
         //폼 여는 함수
@@ -79,6 +83,13 @@ namespace Movie36
             Ticket newTicket = new Ticket();
             newTicket.FormClosed += new FormClosedEventHandler(CLosedTicket);
             newTicket.ShowDialog();
+        }
+        private void OpenTicketList()
+        {
+            this.Hide();
+            TicketListForm newTicketList = new TicketListForm();
+            newTicketList.FormClosed += new FormClosedEventHandler(CLosedTicket);
+            newTicketList.ShowDialog();
         }
         private void OpenOfood()
         {
@@ -116,6 +127,10 @@ namespace Movie36
             this.Show();
         }
         private void CLosedTicket(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
+        private void CLosedTicketList(object sender, FormClosedEventArgs e)
         {
             this.Show();
         }

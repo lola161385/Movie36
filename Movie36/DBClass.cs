@@ -736,6 +736,86 @@ namespace Movie36
             return dt;
         }
 
+        public DataTable GetTickets()
+        {
+            DataTable ticketTable = new DataTable();
+            string connectionString = GetConnectionString();
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"
+                        SELECT T.TICKET_ID, T.CUSTOMER_NAME, T.CUSTOMER_PHONE, T.CUSTOMER_COUNT, T.SELECT_SEATS, 
+                               S.SCHEDULE_DATE, S.SHOW_TIME, 
+                               M.MOVIE_NAME, M.MOVIE_POSTER, 
+                               SC.SCREEN_NAME, SC.SCREEN_TYPE
+                        FROM TICKET T
+                        JOIN SCHEDULE S ON T.SCHEDULE_ID = S.SCHEDULE_ID
+                        JOIN MOVIE M ON S.MOVIE_ID = M.MOVIE_ID
+                        JOIN SCREEN SC ON S.SCREEN_ID = SC.SCREEN_ID
+                        WHERE T.SCHEDULE_ID = S.SCHEDULE_ID
+                        ORDER BY S.SCHEDULE_DATE, S.SHOW_TIME";
+
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(query, conn))
+                    {
+                        adapter.Fill(ticketTable);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("티켓 데이터를 가져오는 중 오류 발생: " + ex.Message);
+                }
+            }
+
+            return ticketTable;
+        }
+
+
+        public DataRow GetTicketDetails(string ticketId)
+        {
+            DataTable ticketDetailsTable = new DataTable();
+            string connectionString = GetConnectionString();
+
+            using (OracleConnection conn = new OracleConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"
+                        SELECT T.TICKET_ID, T.CUSTOMER_NAME, T.CUSTOMER_PHONE, T.CUSTOMER_COUNT, T.SELECT_SEATS, 
+                               S.SCHEDULE_DATE, S.SHOW_TIME, 
+                               M.MOVIE_NAME, M.MOVIE_POSTER, 
+                               SC.SCREEN_NAME, SC.SCREEN_TYPE
+                        FROM TICKET T
+                        JOIN SCHEDULE S ON T.SCHEDULE_ID = S.SCHEDULE_ID
+                        JOIN MOVIE M ON S.MOVIE_ID = M.MOVIE_ID
+                        JOIN SCREEN SC ON S.SCREEN_ID = SC.SCREEN_ID
+                        WHERE T.TICKET_ID = :ticketId";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(":ticketId", OracleDbType.Varchar2).Value = ticketId;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(ticketDetailsTable);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("티켓 상세 정보를 가져오는 중 오류 발생: " + ex.Message);
+                }
+            }
+
+            if (ticketDetailsTable.Rows.Count > 0)
+                return ticketDetailsTable.Rows[0];
+            else
+                throw new Exception("티켓 ID에 해당하는 데이터를 찾을 수 없습니다.");
+        }
+
     }
 
     public class Movie
