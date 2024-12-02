@@ -123,6 +123,18 @@
     <Compile Include="Form\Seats.Designer.cs">
       <DependentUpon>Seats.cs</DependentUpon>
     </Compile>
+    <Compile Include="TicketListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TicketListForm.Designer.cs">
+      <DependentUpon>TicketListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TicketPrintForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TicketPrintForm.Designer.cs">
+      <DependentUpon>TicketPrintForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CheckOrderFood.resx">
       <DependentUpon>CheckOrderFood.cs</DependentUpon>
     </EmbeddedResource>
@@ -158,9 +170,16 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Form\Seats.resx">
       <DependentUpon>Seats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TicketListForm.resx">
+      <DependentUpon>TicketListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TicketPrintForm.resx">
+      <DependentUpon>TicketPrintForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -178,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="36movie.sql" />
+    <Content Include="img\qr.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
