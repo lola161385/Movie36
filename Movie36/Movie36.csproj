@@ -198,6 +198,9 @@
   <ItemGroup>
     <Content Include="36movie.sql" />
     <Content Include="img\qr.png" />
+    <Content Include="img\모아나2.jpg" />
+    <Content Include="img\소방관.jpg" />
+    <Content Include="img\위키드.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
