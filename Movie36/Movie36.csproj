@@ -54,10 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckOrderFood.cs">
+    <Compile Include="Form\CheckOrderFood.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CheckOrderFood.Designer.cs">
+    <Compile Include="Form\CheckOrderFood.Designer.cs">
       <DependentUpon>CheckOrderFood.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\ChangeMovie.cs">
@@ -123,19 +123,19 @@
     <Compile Include="Form\Seats.Designer.cs">
       <DependentUpon>Seats.cs</DependentUpon>
     </Compile>
-    <Compile Include="TicketListForm.cs">
+    <Compile Include="Form\TicketListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TicketListForm.Designer.cs">
+    <Compile Include="Form\TicketListForm.Designer.cs">
       <DependentUpon>TicketListForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TicketPrintForm.cs">
+    <Compile Include="Form\TicketPrintForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TicketPrintForm.Designer.cs">
+    <Compile Include="Form\TicketPrintForm.Designer.cs">
       <DependentUpon>TicketPrintForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CheckOrderFood.resx">
+    <EmbeddedResource Include="Form\CheckOrderFood.resx">
       <DependentUpon>CheckOrderFood.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\ChangeMovie.resx">
@@ -175,10 +175,10 @@
     <EmbeddedResource Include="Form\Seats.resx">
       <DependentUpon>Seats.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TicketListForm.resx">
+    <EmbeddedResource Include="Form\TicketListForm.resx">
       <DependentUpon>TicketListForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TicketPrintForm.resx">
+    <EmbeddedResource Include="Form\TicketPrintForm.resx">
       <DependentUpon>TicketPrintForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
